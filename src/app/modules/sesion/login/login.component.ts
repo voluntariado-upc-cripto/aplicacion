@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Login } from '../../../interfaces/login';
+import { LoginService } from '../../../services/login.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,30 +17,39 @@ export class LoginComponent {
   hide = signal(true);
   loginFailed = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router,private loginService:LoginService,private auth:AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       pass: ['', [Validators.required]]
     });
   }
-
+  accounts:Login[]=[];
+  ngOnInit(): void {
+    this.loginService.getAccounts().subscribe(acc=>this.accounts=acc);
+  }
   onSubmit() {
     if (this.loginForm.valid) {
       const login: Login = {
+        _id:'',
         email: this.loginForm.value.email,
         pass: this.loginForm.value.pass
       };
 
-      // Aquí va tu lógica de autenticación
-      // Si la autenticación falla, establece loginFailed a true.
-      this.loginFailed = false;  // Cambia esto según tu lógica
-
-      this.router.navigate(['']);
-    } else {
-      this.loginFailed = true;
-    }
+      this.loginService.login(login).subscribe(
+        next=>{
+          const account=this.accounts.find(a=>a.email === login.email)
+          if (account) {
+            this.loginFailed = false;
+            this.router.navigate(['administrador']);
+            this.auth.setSession(account);
+          }
+        },
+        error=>{
+          console.error("eror",error);
+          this.loginFailed = true;
+        });
   }
-
+  }
   controlHasError(control: string, error: string): boolean {
     return this.loginForm.controls[control].hasError(error);
   }

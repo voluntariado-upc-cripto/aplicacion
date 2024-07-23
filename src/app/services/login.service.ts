@@ -9,10 +9,15 @@ import { Login } from '../interfaces/login';
 })
 export class LoginService {
 
+
   private apiUrl: string = environment.apiURL;
   constructor(private http:HttpClient) { }
 
-  login(email: string, password: string):Observable<Login> {
-    return this.http.post<Login>(`${this.apiUrl}/accounts/login`, { email, password });
+  login(acc:Login):Observable<Login> {
+    return this.http.post<Login>(`${this.apiUrl}/accounts/login`,acc);
   }
+  getAccounts():Observable<Login[]>{
+    return this.http.get<Login[]>(`${this.apiUrl}/accounts`);
+  }
+
 }

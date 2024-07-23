@@ -1,49 +1,50 @@
 <div class="form-container">
-  <form [formGroup]="signUpForm" class="form" (ngSubmit)="onSubmit()">
+  <fieldset>
+    <legend> Registro de cuenta</legend>
+    <form [formGroup]="signUpForm" class="form" (ngSubmit)="onSubmit()">
 
-    <mat-form-field class="input">
-      <mat-label>Correo electrónico</mat-label>
-      <input matInput
-        placeholder="example@email.com"
-        formControlName="email"
-        required >
-      @if (this.controlHasError('email','required')) {<mat-error *ngIf="">Debes completar este campo.</mat-error>}
-      @else if (this.controlHasError('email','email') ) {<mat-error *ngIf="">Ingresa un email válido.</mat-error>}
-    </mat-form-field>
+      <mat-form-field class="input">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput
+          placeholder="example@email.com"
+          formControlName="email"
+          required maxlength="30">
+        <mat-error *ngIf="controlHasError('email', 'required')">Debes completar este campo.</mat-error>
+        <mat-error *ngIf="controlHasError('email', 'email')">Ingresa un email válido.</mat-error>
+      </mat-form-field>
 
-    <mat-form-field class="input">
-      <mat-label>Ingresa tu contraseña</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'"
-        placeholder="pass123$asdf"
-        formControlName="pass"
-        required>
-      @if (this.controlHasError('pass','required')) {<mat-error *ngIf="">Debes completar este campo.</mat-error>}
-      @else if (this.controlHasError('pass','minLength')) {<mat-error *ngIf="">La contraseña debe ser mayor de 8 digitos.</mat-error>}
+      <mat-form-field class="input">
+        <mat-label>Ingresa tu contraseña</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'"
+          placeholder="pass123$asdf"
+          formControlName="pass"
+          required maxlength="20">
+        <mat-error *ngIf="controlHasError('pass', 'required')">Debes completar este campo.</mat-error>
+        <mat-error *ngIf="controlHasError('pass', 'minlength')">La contraseña debe ser mayor de 8 digitos.</mat-error>
 
-      <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"  type="button" [attr.aria-pressed]="hide">
-        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
+        <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"  type="button" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field class="input">
-      <mat-label>Ingresa tu contraseña</mat-label>
-      <input matInput [type]="hide2 ? 'password' : 'text'"
-        placeholder="pass123$asdf"
-        formControlName="passConfirm"
-        required>
-      @if (this.controlHasError('passConfirm','required')) {<mat-error *ngIf="">Debes completar este campo.</mat-error>}
-      @else if (passwordMatchValidator(signUpForm)) {<mat-error *ngIf="">Las contraseñas no coinciden.</mat-error>}
-      <button mat-icon-button matSuffix (click)="clickEvent($event)" [attr.aria-label]="'Hide password'"  type="button" [attr.aria-pressed]="hide2">
-        <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
+      <mat-form-field class="input">
+        <mat-label>Confirma tu contraseña</mat-label>
+        <input matInput [type]="hide2 ? 'password' : 'text'"
+          placeholder="pass123$asdf"
+          formControlName="passConfirm"
+          required maxlength="20">
+        <mat-error *ngIf="controlHasError('passConfirm', 'required')">Debes completar este campo.</mat-error>
+        <mat-error *ngIf="signUpForm.hasError('mismatch')">Las contraseñas no coinciden.</mat-error>
 
-    <div class="alternativas">
-      <a class="alternativas__enlace" title="Crea tu cuenta" [routerLink]="['signup']" routerLinkActive="active">Aún no tengo cuenta</a>
-    </div>
+        <button mat-icon-button matSuffix (click)="clickEvent2($event)" [attr.aria-label]="'Hide password'"  type="button" [attr.aria-pressed]="hide2">
+          <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <button mat-flat-button class="enviar" type="submit" [disabled]="signUpForm.invalid" color="custom-color">ENTRAR</button>
+      <button mat-flat-button class="enviar" type="submit" [disabled]="signUpForm.invalid" color="custom-color">ENTRAR</button>
 
-    <mat-error class="error__formulario"*ngIf="">Usuario/email o contraseña incorrectos.</mat-error>
-  </form>
+      <mat-error class="error__formulario" *ngIf="!loginSuccesful">Email ya exite en otra cuenta.</mat-error>
+    </form>
+  </fieldset>
+
 </div>
