@@ -24,22 +24,39 @@ export class SignupComponent {
     return this.signUpForm.controls[control].hasError(error);
   }
   loginSuccesful=true;
-  onSubmit(){
+  onSubmit(button:'manual'|'sha256'){
     if (this.signUpForm.valid) {
       const newAcc:Login={
         _id:'',
         email: this.signUpForm.value.email,
         pass: this.signUpForm.value.pass
       }
-      this.signUpService.signup(newAcc).subscribe(
-        next=>{this.router.navigate([''])
-          this.loginSuccesful=true;
-        },
+      if(button==='manual'){
+        this.signUpService.signup_manual_hash(newAcc).subscribe(
+          next=>{this.router.navigate([''])
+            this.loginSuccesful=true;
+          },
 
-        error => {
-          console.error("eror",error);
-          this.loginSuccesful = false;
-        })
+          error => {
+            console.error("eror",error);
+            this.loginSuccesful = false;
+          })
+      }
+      else if(button==='sha256'){
+        this.signUpService.signup_bycrip_hash(newAcc).subscribe(
+          next=>{this.router.navigate([''])
+            this.loginSuccesful=true;
+          },
+
+          error => {
+            console.error("eror",error);
+            this.loginSuccesful = false;
+          })
+      }
+      else{
+        console.log('Formulario no válido');
+        this.loginSuccesful = false;
+      }
     }
   }
   hide = true;

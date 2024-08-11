@@ -1,7 +1,7 @@
 <div class="form-container">
   <fieldset>
     <legend> Registro de cuenta</legend>
-    <form [formGroup]="signUpForm" class="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="signUpForm" class="form">
 
       <mat-form-field class="input">
         <mat-label>Correo electrónico</mat-label>
@@ -41,7 +41,9 @@
         </button>
       </mat-form-field>
 
-      <button mat-flat-button class="enviar" type="submit" [disabled]="signUpForm.invalid" color="custom-color">ENTRAR</button>
+      <button mat-flat-button class="enviar" type="submit" (click)="onSubmit('manual')" [disabled]="signUpForm.invalid" color="custom-color">Hash Manual</button>
+      <button mat-flat-button class="enviar" type="submit" (click)="onSubmit('sha256')" [disabled]="signUpForm.invalid" color="custom-color">Hash SHA-256</button>
+
 
       <mat-error class="error__formulario" *ngIf="!loginSuccesful">Email ya exite en otra cuenta.</mat-error>
     </form>
